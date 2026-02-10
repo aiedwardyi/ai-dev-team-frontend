@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SystemSettings } from '../types';
 import { 
@@ -27,7 +28,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
     }
   };
 
-  const sectionClasses = "p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] space-y-4";
+  const sectionClasses = "p-4 md:p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] space-y-4";
   const labelClasses = "text-xs font-black text-slate-900 dark:text-white flex items-center gap-2";
   const subLabelClasses = "text-[11px] text-slate-500 dark:text-slate-400 font-bold leading-relaxed";
   const inputClasses = "w-full bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-[11px] text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors font-bold";
@@ -38,25 +39,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
       onMouseDown={handleBackdropMouseDown}
     >
       <div 
-        className="bg-white dark:bg-[#0d1017] border border-slate-200 dark:border-white/10 w-full max-w-2xl rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col animate-fade-in-up"
+        className="bg-white dark:bg-[#0d1017] border border-slate-200 dark:border-white/10 w-full max-w-2xl rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col animate-fade-in-up max-h-[90vh] sm:max-h-[85vh]"
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-8 border-b border-slate-200 dark:border-white/5 flex items-center justify-between">
+        <div className="p-5 md:p-8 border-b border-slate-200 dark:border-white/5 flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Settings</h2>
+            <h2 className="text-lg md:text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Settings</h2>
             <p className="text-[10px] text-slate-400 dark:text-indigo-400/40 font-black uppercase tracking-[0.2em] mt-1">Personalize how you interact with ai-dev-team</p>
           </div>
           <button 
             onClick={onClose}
             className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors text-slate-400 cursor-pointer"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar max-h-[75vh]">
+        <div className="flex-1 overflow-y-auto p-5 md:p-8 space-y-6 md:space-y-8 custom-scrollbar">
           
           {/* Vibe Coding Level */}
           <div className={sectionClasses}>
@@ -155,14 +156,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
 
           {/* Chat Settings */}
           <div className={sectionClasses}>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
                <div className="space-y-1">
                   <span className={labelClasses}>Chat suggestions</span>
                   <p className={subLabelClasses}>Show helpful suggestions in the chat interface to enhance your experience.</p>
                </div>
                <button 
                   onClick={() => setLocalSettings({...localSettings, chatSuggestions: !localSettings.chatSuggestions})}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${localSettings.chatSuggestions ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-white/10'}`}
+                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${localSettings.chatSuggestions ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-white/10'}`}
                >
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSettings.chatSuggestions ? 'translate-x-6' : 'translate-x-1'}`} />
                </button>
@@ -226,11 +227,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
         </div>
 
         {/* Action Footer */}
-        <div className="p-8 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.01] flex items-center justify-between">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Settings automatically persist to session</p>
+        <div className="p-5 md:p-8 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.01] flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest text-center sm:text-left">Settings automatically persist to session</p>
           <button 
             onClick={handleApply}
-            className="px-10 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-indigo-600/20 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-indigo-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Check size={16} />
             Apply & Close

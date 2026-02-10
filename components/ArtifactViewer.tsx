@@ -103,8 +103,9 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
         const currentContent = files[activeFile]?.content || '';
 
         return (
-          <div className="flex h-full min-h-[550px] bg-white dark:bg-[#080a0f]">
-             <div className="w-60 border-r border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#080a0f] flex flex-col shrink-0">
+          <div className="flex flex-col md:flex-row h-full min-h-[550px] bg-white dark:bg-[#080a0f]">
+             {/* File Explorer */}
+             <div className="w-full md:w-60 h-40 md:h-auto border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#080a0f] flex flex-col shrink-0">
                <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#0a0d14]/50">
                  <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Explorer</div>
                  <Hash size={12} className="text-slate-300 dark:text-slate-700" />
@@ -127,6 +128,7 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
                </div>
              </div>
 
+             {/* Code Editor */}
              <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#080a0f]">
                 <div className="h-10 bg-slate-50 dark:bg-[#0a0d14] border-b border-slate-200 dark:border-white/5 flex items-center px-4 gap-2">
                    <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-[#080a0f] border-x border-t border-slate-200 dark:border-white/5 rounded-t-lg -mb-[1px] relative z-10">
@@ -156,7 +158,7 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
     if (artifact.type === 'PRD') {
         const prd = artifact.content as PrdResponse;
         return (
-            <div className="bg-white dark:bg-[#0f111a] p-10 space-y-10 font-sans relative">
+            <div className="bg-white dark:bg-[#0f111a] p-6 md:p-10 space-y-10 font-sans relative h-full overflow-y-auto custom-scrollbar">
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none"></div>
                 
                 <div className="space-y-4 relative z-10">
@@ -164,7 +166,7 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
                     <p className="text-slate-600 dark:text-indigo-100/60 leading-relaxed font-bold">{prd.summary}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10 pb-10">
                     <div className="space-y-6">
                         <h4 className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em]">Functional Scope</h4>
                         <ul className="space-y-3">
@@ -195,17 +197,17 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
     if (artifact.type === 'PLAN') {
         const plan = artifact.content as PlanResponse;
         return (
-            <div className="bg-white dark:bg-[#0f111a] p-10 space-y-8 relative">
+            <div className="bg-white dark:bg-[#0f111a] p-6 md:p-10 space-y-8 relative h-full overflow-y-auto custom-scrollbar">
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none"></div>
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-6 relative z-10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-white/10 pb-6 relative z-10 gap-4">
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">System Architecture & Roadmap</h3>
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+                    <div className="flex items-center gap-2 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 w-fit">
                         <Clock size={12} />
                         Cycle: {plan.estimatedTimeline}
                     </div>
                 </div>
 
-                <div className="space-y-12 relative z-10">
+                <div className="space-y-12 relative z-10 pb-10">
                     {plan.phases.map((phase, idx) => (
                         <div key={idx} className="relative pl-8 border-l border-slate-200 dark:border-white/10">
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-indigo-600 border-4 border-white dark:border-[#0f111a]" />
@@ -240,8 +242,8 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
   };
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-4 mt-3 px-2">
+    <div className="animate-fade-in h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4 mt-3 px-2 shrink-0">
         <div className="flex items-center gap-2">
            <div className="text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
              {artifact.type === 'PRD' ? <FileText size={14} /> : artifact.type === 'PLAN' ? <Map size={14} /> : <Terminal size={14} />}
@@ -253,10 +255,10 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
           className="flex items-center gap-2 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-white transition-all uppercase tracking-widest cursor-pointer group"
         >
           <Copy size={12} className="group-hover:scale-110 transition-transform" />
-          Copy Artifact
+          <span className="hidden sm:inline">Copy Artifact</span>
         </button>
       </div>
-      <div className="border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-[#080a0f]">
+      <div className="border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-[#080a0f] flex-1">
         {renderContent()}
       </div>
     </div>

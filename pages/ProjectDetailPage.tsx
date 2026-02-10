@@ -7,7 +7,7 @@ import LivePreview from '../components/LivePreview';
 import { 
   Play, RefreshCw, Terminal, Download, Monitor, Code2, Send, 
   Sparkles, Activity, FileText, Layout, Share2, MoreHorizontal,
-  ClipboardList, Milestone, BookOpen, Layers, Check, Bot, Globe, Smartphone, Palette, AlertTriangle, Bug, Wrench, Loader2, History, ListChecks, FileCode, X as LucideX
+  ClipboardList, Milestone, BookOpen, Layers, Check, Bot, Globe, Smartphone, Palette, AlertTriangle, Bug, Wrench, Loader2, History, ListChecks, FileCode, X as LucideX, MessageSquare
 } from 'lucide-react';
 
 interface ProjectDetailPageProps {
@@ -26,15 +26,21 @@ const TaskHistoryView: React.FC<{ tasks: EngineerTask[] }> = ({ tasks }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto py-6 animate-fade-in px-4 md:px-0">
       <div className="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/5 pb-4">
         <div>
           <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Engineer Activity Log</h3>
           <p className="text-[10px] text-slate-400 dark:text-indigo-400/40 font-black uppercase tracking-[0.2em] mt-1">Timeline of autonomous engineering tasks</p>
         </div>
-        <div className="px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest flex items-center gap-2">
-          <ListChecks size={12} />
-          {tasks.length} Tasks Finalized
+        <div className="px-3 py-2 sm:px-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center gap-2 whitespace-nowrap shrink-0 shadow-sm shadow-indigo-500/10 transition-all hover:bg-indigo-500/20">
+          <ListChecks size={14} className="shrink-0" />
+          <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest pt-px">
+            <span>{tasks.length}</span>
+            <span className="opacity-70 font-bold">
+              <span className="hidden sm:inline">Tasks Finalized</span>
+              <span className="sm:hidden">Tasks</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -56,10 +62,10 @@ const TaskHistoryView: React.FC<{ tasks: EngineerTask[] }> = ({ tasks }) => {
               </div>
             </div>
 
-            <div className="flex-1 bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-3xl p-5 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all shadow-sm hover:shadow-md">
+            <div className="flex-1 bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-3xl p-5 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all shadow-sm hover:shadow-md min-w-0">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white font-mono tracking-tight">{task.filename}</h4>
-                <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 uppercase tracking-widest">Completed</span>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white font-mono tracking-tight truncate mr-2">{task.filename}</h4>
+                <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 uppercase tracking-widest shrink-0">Completed</span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-indigo-100/40 font-bold leading-relaxed">{task.description}</p>
             </div>
@@ -88,7 +94,7 @@ const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: (
 
   return (
     <div className="mb-6 p-5 bg-red-500/10 border border-red-500/30 rounded-2xl animate-fade-in relative overflow-hidden group/monitor">
-      <div className="absolute top-0 right-0 p-2 z-50">
+      <div className="absolute top-0 right-0 p-2 z-10">
         <button 
           onClick={(e) => {
             e.stopPropagation();
@@ -108,16 +114,16 @@ const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: (
         {errors.map(err => {
           const isFixing = fixingIds.has(err.id);
           return (
-            <div key={err.id} className="flex items-center gap-4 bg-white/5 border border-white/5 rounded-2xl p-4 group hover:bg-red-500/[0.03] transition-all">
+            <div key={err.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/5 border border-white/5 rounded-2xl p-4 group hover:bg-red-500/[0.03] transition-all">
               <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
                 <AlertTriangle size={14} />
               </div>
               
-              <div className="flex-1 space-y-1">
+              <div className="flex-1 space-y-1 w-full">
                 <div className="text-[9px] font-mono text-red-500/50 uppercase tracking-widest font-bold">
                   {new Date(err.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                 </div>
-                <div className="text-[11px] font-bold text-slate-800 dark:text-red-200 leading-relaxed">
+                <div className="text-[11px] font-bold text-slate-800 dark:text-red-200 leading-relaxed break-words">
                   {err.message}
                 </div>
               </div>
@@ -125,7 +131,7 @@ const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: (
               <button 
                 onClick={() => handleFix(err.id)}
                 disabled={isFixing}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg ${
+                className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg ${
                   isFixing 
                   ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' 
                   : 'bg-red-500 text-white hover:bg-red-600 shadow-red-500/20 cursor-pointer active:scale-95'
@@ -145,12 +151,6 @@ const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: (
     </div>
   );
 };
-
-const X = ({ size, className }: any) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M18 6L6 18M6 6l12 12" />
-  </svg>
-);
 
 const AgentStatusMessage: React.FC<{ project: Project; name: string }> = ({ project, name }) => {
   const [textIndex, setTextIndex] = useState(0);
@@ -258,6 +258,8 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'brief' | 'prd' | 'architecture' | 'code' | 'tasks' | 'terminal'>('preview');
   const [chatInput, setChatInput] = useState('');
   const [progress, setProgress] = useState(0);
+  const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -370,36 +372,43 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
     return 'text-indigo-600 dark:text-indigo-400';
   };
 
+  const tabs = [
+    { id: 'preview', icon: Monitor, label: 'Preview' },
+    { id: 'brief', icon: BookOpen, label: 'Brief' },
+    { id: 'prd', icon: ClipboardList, label: 'PRD' },
+    { id: 'architecture', icon: Milestone, label: 'Plan' },
+    { id: 'code', icon: Code2, label: 'Code' },
+    { id: 'tasks', icon: History, label: 'Tasks' },
+    { id: 'terminal', icon: Terminal, label: 'Logs', badge: errorCount }
+  ];
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#0b0e14] relative transition-colors duration-300">
-      <header className="h-14 border-b border-slate-200 dark:border-white/5 flex items-center justify-between px-5 bg-white/80 dark:bg-[#080a0f]/80 backdrop-blur-xl z-30">
-        <div className="flex items-center gap-3">
-          <div className="text-[11px] font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-            <span className="text-slate-400 dark:text-indigo-400/60 font-bold uppercase text-[9px] pt-0.5">Projects /</span>
-            {project.name}
+      <header className="h-14 border-b border-slate-200 dark:border-white/5 flex items-center justify-between px-3 md:px-5 bg-white/80 dark:bg-[#080a0f]/80 backdrop-blur-xl relative z-[60] shrink-0">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="text-[11px] font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate">
+            <span className="text-slate-400 dark:text-indigo-400/60 font-bold uppercase text-[9px] pt-0.5 hidden sm:inline">Projects /</span>
+            <span className="truncate">{project.name}</span>
           </div>
-          <div className={`px-2 py-0.5 rounded-lg text-[8px] uppercase tracking-widest font-black border ${
+          <div className={`px-2 py-0.5 rounded-lg text-[8px] uppercase tracking-widest font-black border shrink-0 ${
             project.status === 'RUNNING' ? 'border-indigo-500/40 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 animate-pulse' : 'border-slate-200 dark:border-slate-800 text-slate-400'
           }`}>
             {project.status}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 p-1">
-            {[
-              { id: 'preview', icon: Monitor, label: 'Preview' },
-              { id: 'brief', icon: BookOpen, label: 'Brief' },
-              { id: 'prd', icon: ClipboardList, label: 'PRD' },
-              { id: 'architecture', icon: Milestone, label: 'Plan' },
-              { id: 'code', icon: Code2, label: 'Code' },
-              { id: 'tasks', icon: History, label: 'Tasks' },
-              { id: 'terminal', icon: Terminal, label: 'Logs', badge: errorCount }
-            ].map(tab => (
+        <div className="flex items-center gap-2 md:gap-3">
+          
+          {/* Desktop Navigation Tabs */}
+          <div className="hidden lg:flex items-center bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 p-1 overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
+            {tabs.map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
+                onClick={() => {
+                   setActiveTab(tab.id as any);
+                   setShowMobileChat(false);
+                }}
+                className={`relative flex items-center gap-1.5 px-2 md:px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
                   activeTab === tab.id 
                     ? 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/20' 
                     : 'text-slate-500 dark:text-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-50 cursor-pointer'
@@ -415,17 +424,98 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
               </button>
             ))}
           </div>
+
+          {/* Mobile Navigation Controls */}
+          <div className="lg:hidden flex items-center gap-2">
+             <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-full p-1 border border-slate-200 dark:border-white/5">
+                <button
+                   onClick={() => { setShowMobileChat(true); setIsMobileMenuOpen(false); }}
+                   className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+                     showMobileChat 
+                       ? 'bg-white dark:bg-[#1a1f2e] text-indigo-600 dark:text-white shadow-sm' 
+                       : 'text-slate-500 dark:text-slate-400'
+                   }`}
+                >
+                   Chat
+                </button>
+                <button
+                   onClick={() => { setShowMobileChat(false); setActiveTab('preview'); setIsMobileMenuOpen(false); }}
+                   className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+                     !showMobileChat && activeTab === 'preview' 
+                       ? 'bg-white dark:bg-[#1a1f2e] text-indigo-600 dark:text-white shadow-sm' 
+                       : 'text-slate-500 dark:text-slate-400'
+                   }`}
+                >
+                   Preview
+                </button>
+             </div>
+
+             <div className="relative">
+                <button
+                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                   className={`w-9 h-9 flex items-center justify-center rounded-full border transition-all ${
+                     isMobileMenuOpen || (!showMobileChat && activeTab !== 'preview')
+                       ? 'bg-white dark:bg-[#1a1f2e] border-indigo-500/30 text-indigo-600 dark:text-white shadow-sm' 
+                       : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400'
+                   }`}
+                >
+                   <MoreHorizontal size={16} />
+                   {errorCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white dark:border-[#080a0f]"></span>
+                   )}
+                </button>
+                
+                {isMobileMenuOpen && (
+                   <>
+                      <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsMobileMenuOpen(false)}></div>
+                      <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-[#1a1f2e] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden py-1 z-50 animate-fade-in-up">
+                         {tabs.filter(t => t.id !== 'code' && t.id !== 'preview').map(tab => (
+                            <button
+                               key={tab.id}
+                               onClick={() => {
+                                  setActiveTab(tab.id as any);
+                                  setShowMobileChat(false);
+                                  setIsMobileMenuOpen(false);
+                               }}
+                               className={`w-full flex items-center gap-3 px-4 py-3 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                                  activeTab === tab.id && !showMobileChat
+                                     ? 'bg-indigo-5 dark:bg-white/5 text-indigo-600 dark:text-white' 
+                                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5'
+                               }`}
+                            >
+                               <tab.icon size={14} />
+                               {tab.label}
+                               {tab.id === 'terminal' && errorCount > 0 && (
+                                  <span className="ml-auto bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">
+                                     {errorCount}
+                                  </span>
+                               )}
+                            </button>
+                         ))}
+                      </div>
+                   </>
+                )}
+             </div>
+          </div>
           
-          <div className="w-[1px] h-4 bg-slate-200 dark:bg-white/10 mx-1"></div>
+          <div className="hidden sm:block w-[1px] h-4 bg-slate-200 dark:bg-white/10 mx-1"></div>
           
-          <button className="bg-gradient-to-br from-indigo-600 to-violet-600 hover:brightness-110 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg shadow-indigo-500/20 cursor-pointer">
+          <button className="hidden sm:block bg-gradient-to-br from-indigo-600 to-violet-600 hover:brightness-110 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg shadow-indigo-500/20 cursor-pointer">
             Deploy
           </button>
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden">
-        <div className="w-72 lg:w-[320px] border-r border-slate-200 dark:border-white/5 flex flex-col bg-slate-50 dark:bg-[#080a0f] relative z-20">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+        
+        {/* Chat / Agent Sidebar - Toggleable on Mobile */}
+        <div className={`
+          ${showMobileChat ? 'flex' : 'hidden'} lg:flex 
+          w-full lg:w-72 xl:w-[320px] 
+          border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-white/5 
+          flex-col bg-slate-50 dark:bg-[#080a0f] relative z-20 
+          absolute inset-0 lg:static h-full
+        `}>
           <div className="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
             <div className="bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl p-4 text-[11px] leading-relaxed text-slate-800 dark:text-indigo-50 font-bold shadow-sm">
               <div className="text-indigo-600 dark:text-indigo-400 font-black mb-2 uppercase tracking-widest flex items-center gap-1.5 text-[9px]">
@@ -491,7 +581,8 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
           </div>
         </div>
 
-        <div className="flex-1 relative overflow-hidden flex flex-col bg-slate-100 dark:bg-[#0b0e14]">
+        {/* Main Workspace - Hidden on Mobile if Chat is open */}
+        <div className={`${showMobileChat ? 'hidden' : 'flex'} lg:flex flex-1 relative overflow-hidden flex-col bg-slate-100 dark:bg-[#0b0e14]`}>
           {project.status === 'RUNNING' && activeTab !== 'tasks' && activeTab !== 'terminal' && (
             <div className="absolute inset-0 z-40 bg-slate-50 dark:bg-[#0b0e14] flex flex-col items-center justify-center animate-fade-in p-10 text-center">
               <div className="w-full max-w-4xl flex flex-col items-center gap-8">
@@ -522,7 +613,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
             </div>
           )}
 
-          <div className={`flex-1 p-6 overflow-hidden transition-opacity duration-500 ${project.status === 'RUNNING' && activeTab !== 'tasks' && activeTab !== 'terminal' ? 'opacity-0' : 'opacity-100'}`}>
+          <div className={`flex-1 p-4 md:p-6 overflow-hidden transition-opacity duration-500 ${project.status === 'RUNNING' && activeTab !== 'tasks' && activeTab !== 'terminal' ? 'opacity-0' : 'opacity-100'}`}>
             {activeTab === 'preview' && (
               <div className="h-full animate-fade-in">
                 <LivePreview code={codeArtifact?.content} projectName={project.name} />
@@ -531,7 +622,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
 
             {activeTab === 'brief' && (
               <div className="h-full overflow-y-auto custom-scrollbar animate-fade-in">
-                <div className="max-w-4xl mx-auto py-6">
+                <div className="max-w-4xl mx-auto py-2 md:py-6">
                   {prdArtifact ? (
                     <div className="space-y-12">
                       <div className="text-center space-y-3 mb-16">
@@ -598,8 +689,8 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
             )}
             
             {activeTab === 'prd' && (
-              <div className="h-full overflow-y-auto custom-scrollbar animate-fade-in pr-2">
-                <div className="max-w-4xl mx-auto py-2">
+              <div className="h-full animate-fade-in pr-2">
+                <div className="max-w-4xl mx-auto py-2 h-full">
                   {prdArtifact ? (
                     <ArtifactViewer artifact={prdArtifact} />
                   ) : (
@@ -613,8 +704,8 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
             )}
 
             {activeTab === 'architecture' && (
-              <div className="h-full overflow-y-auto custom-scrollbar animate-fade-in pr-2">
-                <div className="max-w-4xl mx-auto py-2">
+              <div className="h-full animate-fade-in pr-2">
+                <div className="max-w-4xl mx-auto py-2 h-full">
                   {planArtifact ? (
                     <ArtifactViewer artifact={planArtifact} />
                   ) : (
@@ -629,7 +720,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
 
             {activeTab === 'code' && (
               <div className="h-full overflow-auto custom-scrollbar animate-fade-in pr-2">
-                <div className="max-w-5xl mx-auto py-2">
+                <div className="max-w-5xl mx-auto py-2 h-full">
                   {hasCode ? (
                     <ArtifactViewer artifact={codeArtifact} />
                   ) : (
@@ -657,7 +748,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
                     </div>
                     <div className="flex items-center gap-4">
                       {errorCount > 0 && (
-                        <div className="flex items-center gap-2 text-red-500 animate-pulse">
+                        <div className="flex items-center gap-2 text-red-500 animate-pulse hidden sm:flex">
                           <AlertTriangle size={12} />
                           <span>{errorCount} FAULT(S) DETECTED</span>
                         </div>
@@ -675,7 +766,8 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
                         ) : (
                           <Bug size={12} className="group-hover:rotate-12 transition-transform" />
                         )}
-                        Simulate Fault
+                        <span className="hidden sm:inline">Simulate Fault</span>
+                        <span className="sm:hidden">Fault</span>
                       </button>
                     </div>
                  </div>
@@ -684,9 +776,9 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
                     <FaultMonitor logs={logs} projectId={projectId} onDismiss={handleDismissFaults} />
                     <div className="space-y-2">
                       {logs.map(log => (
-                        <div key={log.id} className="mb-2 flex gap-5 items-start">
+                        <div key={log.id} className="mb-2 flex gap-2 sm:gap-5 items-start">
                           <span className="text-slate-400 dark:text-slate-600 shrink-0 font-mono text-[10px] pt-0.5">{new Date(log.timestamp).toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit'})}</span>
-                          <span className={`font-bold ${
+                          <span className={`font-bold break-words w-full ${
                             log.type === 'error' ? 'text-red-600 dark:text-red-400' : 
                             log.type === 'success' ? 'text-emerald-600 dark:text-emerald-400 font-black' : 
                             log.type === 'system' ? 'text-indigo-600 dark:text-indigo-400 font-black' : 'text-slate-700 dark:text-slate-100'

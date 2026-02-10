@@ -26,25 +26,25 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 relative transition-colors duration-300">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative transition-colors duration-300 overflow-y-auto">
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.1] animate-grid-move pointer-events-none"></div>
       
-      <div className="w-full max-w-2xl relative z-10 animate-fade-in">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-6">
+      <div className="w-full max-w-2xl relative z-10 animate-fade-in py-10 md:py-0">
+        <div className="text-center mb-8 md:mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-6 animate-pulse-glow">
             < Zap size={10} fill="currentColor" />
             Next-Gen Multi-Agent Swarm
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter mb-4 leading-none">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter mb-4 leading-none">
             What can I <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-400 dark:from-indigo-400 dark:via-violet-400 dark:to-teal-400 animate-text-glow">build</span> for you?
           </h1>
-          <p className="text-slate-500 dark:text-indigo-200/60 text-lg font-bold">
+          <p className="text-slate-500 dark:text-indigo-200/60 text-base md:text-lg font-bold px-4 md:px-0">
             Describe your application. Our agent swarm handles the PRD, Architecture, and Code.
           </p>
         </div>
 
-        {/* Suggestion Chips - Removed delayed fadeInUp to stop blinking/shift */}
-        <div className="mb-6 flex flex-wrap gap-2 justify-center animate-fade-in">
+        {/* Suggestion Chips */}
+        <div className="mb-6 flex flex-wrap gap-2 justify-center animate-fade-in px-2">
           {suggestions.map((item, idx) => (
             <button 
               key={idx}
@@ -57,7 +57,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="relative group animate-fade-in">
+        <form onSubmit={handleSubmit} className="relative group animate-fade-in px-2">
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-teal-600 rounded-3xl blur opacity-10 group-focus-within:opacity-30 transition duration-1000"></div>
           
           <div className="relative bg-white dark:bg-[#0d1017]/95 backdrop-blur-3xl border border-slate-200 dark:border-white/15 rounded-3xl p-2 shadow-2xl overflow-hidden">
@@ -65,7 +65,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Describe your project in detail..."
-              className="w-full bg-transparent border-none text-slate-900 dark:text-white px-6 pt-6 pb-20 focus:ring-0 focus:outline-none outline-none resize-none min-h-[180px] text-lg font-bold placeholder:text-slate-300 dark:placeholder:text-slate-500 custom-scrollbar"
+              className="w-full bg-transparent border-none text-slate-900 dark:text-white px-4 md:px-6 pt-4 md:pt-6 pb-20 focus:ring-0 focus:outline-none outline-none resize-none min-h-[160px] md:min-h-[180px] text-base md:text-lg font-bold placeholder:text-slate-300 dark:placeholder:text-slate-500 custom-scrollbar"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -79,7 +79,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
               <button 
                 type="submit"
                 disabled={!prompt.trim()}
-                className="flex items-center gap-2 bg-gradient-to-br from-indigo-600 to-violet-600 hover:brightness-110 disabled:opacity-30 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-indigo-500/30 group/btn cursor-pointer disabled:cursor-not-allowed"
+                className="flex items-center gap-2 bg-gradient-to-br from-indigo-600 to-violet-600 hover:brightness-110 disabled:opacity-30 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-indigo-500/30 group/btn cursor-pointer disabled:cursor-not-allowed w-full md:w-auto justify-center"
               >
                 <span>Generate</span>
                 <Send size={18} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -89,7 +89,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
         </form>
       </div>
 
-      <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center gap-8 text-slate-400 dark:text-slate-500">
+      <div className="md:absolute bottom-8 md:bottom-12 left-0 right-0 flex justify-center items-center gap-8 text-slate-400 dark:text-slate-500 mt-8 md:mt-0">
         <div className="flex items-center gap-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-default group">
           <Github size={16} className="group-hover:scale-110 transition-transform" />
           <span className="text-xs font-black uppercase tracking-widest">Source</span>

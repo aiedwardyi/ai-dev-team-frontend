@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Project } from '../types';
 import { Plus, Folder, LayoutGrid, Clock, Settings, Search, Zap, Moon, Sun, Trash2, X, AlertCircle, Check } from 'lucide-react';
 
@@ -12,6 +13,8 @@ interface SidebarProps {
   onDeleteProject: (id: string) => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ 
@@ -22,7 +25,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   onOpenSettings,
   onDeleteProject,
   theme,
-  onToggleTheme
+  onToggleTheme,
+  isOpen = false,
+  onClose
 }) => {
   const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
@@ -48,13 +53,26 @@ const Sidebar: React.FC<SidebarProps> = ({
   const deletingProject = projects.find(p => p.id === deletingProjectId);
 
   return (
-    <aside className="w-64 bg-surface-light dark:bg-[#080a0f] border-r border-slate-200 dark:border-white/5 flex flex-col z-50 transition-colors duration-300 relative">
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={onNewProject}>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
-            <Zap size={16} fill="currentColor" />
+    <aside className={`
+      fixed inset-y-0 left-0 z-[80] w-64 bg-surface-light dark:bg-[#080a0f] border-r border-slate-200 dark:border-white/5 
+      flex flex-col transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
+      ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+    `}>
+      <div className="p-6 relative">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2 cursor-pointer group" onClick={onNewProject}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+              <Zap size={16} fill="currentColor" />
+            </div>
+            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">ai-dev-<span className="text-indigo-600 dark:text-indigo-400">team</span></span>
           </div>
-          <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">ai-dev-<span className="text-indigo-600 dark:text-indigo-400">team</span></span>
+          {/* Mobile Close Button */}
+          <button 
+            onClick={onClose}
+            className="lg:hidden p-1 text-slate-400 hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         <button 
@@ -134,27 +152,28 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {deletingProjectId && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-[#0d1017] border border-slate-200 dark:border-white/10 w-full max-w-md rounded-[2rem] overflow-hidden shadow-2xl p-8 space-y-6 animate-fade-in-up">
-            <div className="flex flex-col items-center text-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500">
+      {/* Delete Confirmation Modal - Rendered via Portal to break out of Sidebar constraints */}
+      {deletingProjectId && createPortal(
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-[#0B0E14] border border-slate-200 dark:border-white/10 w-full max-w-[400px] rounded-[2rem] overflow-hidden shadow-2xl p-6 md:p-8 space-y-6 animate-fade-in-up relative">
+            <div className="flex flex-col items-center text-center gap-4 relative z-10">
+              <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-[#1A1D24] border border-red-100 dark:border-white/5 flex items-center justify-center text-red-500 mb-2 shadow-lg">
                 <AlertCircle size={32} />
               </div>
+              
               <div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Confirm Deletion</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-bold mt-2 leading-relaxed">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase mb-2">Confirm Deletion</h2>
+                <p className="text-[13px] text-slate-500 dark:text-slate-400 font-bold leading-relaxed px-2 md:px-4">
                   You are about to permanently erase <span className="text-red-500 font-black">"{deletingProject?.name}"</span>. 
                   This action is irreversible and all artifacts will be lost.
                 </p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 dark:text-indigo-400/60 uppercase tracking-widest text-center block w-full">
-                  Type <span className="text-slate-900 dark:text-white font-black">DELETE</span> to confirm
+            <div className="space-y-6 relative z-10">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-400 dark:text-indigo-400/60 uppercase tracking-[0.2em] text-center block w-full">
+                  Type <span className="text-slate-900 dark:text-white">DELETE</span> to confirm
                 </label>
                 <input 
                   type="text" 
@@ -162,24 +181,24 @@ const Sidebar: React.FC<SidebarProps> = ({
                   value={deleteConfirmation}
                   onChange={(e) => setDeleteConfirmation(e.target.value.toUpperCase())}
                   placeholder="Type here..."
-                  className="w-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-center text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500 transition-colors font-black tracking-widest uppercase placeholder:normal-case placeholder:font-bold placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                  className="w-full bg-slate-50 dark:bg-[#080a0f] border border-red-400/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-center text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500 transition-colors font-bold tracking-widest uppercase placeholder:normal-case placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-3 pt-2">
                 <button 
                   onClick={cancelDelete}
-                  className="px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
+                  className="flex-1 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={confirmDelete}
                   disabled={deleteConfirmation !== 'DELETE'}
-                  className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer border ${
                     deleteConfirmation === 'DELETE' 
-                    ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/20 active:scale-95' 
-                    : 'bg-slate-200 dark:bg-white/5 text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                    ? 'bg-red-500 hover:bg-red-600 text-white border-red-500 shadow-lg shadow-red-500/20 active:scale-95' 
+                    : 'bg-slate-200 dark:bg-[#1A1D24] text-slate-400 dark:text-slate-600 border-transparent cursor-not-allowed'
                   }`}
                 >
                   <Trash2 size={14} />
@@ -188,7 +207,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </aside>
   );
