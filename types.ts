@@ -1,3 +1,4 @@
+
 export interface Project {
   id: string;
   name: string;
@@ -5,9 +6,17 @@ export interface Project {
   createdAt: number;
   status: 'IDLE' | 'RUNNING' | 'COMPLETED' | 'FAILED';
   currentStage: AgentStage;
+  engineerTasks?: EngineerTask[];
 }
 
 export type AgentStage = 'idle' | 'pm' | 'planner' | 'engineer' | 'complete';
+
+export interface EngineerTask {
+  id: string;
+  filename: string;
+  timestamp: number;
+  description: string;
+}
 
 export interface Artifact {
   id: string;

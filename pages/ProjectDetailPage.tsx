@@ -1,18 +1,74 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { backend } from '../services/orchestrator';
-import { Project, Artifact, LogEntry } from '../types';
+import { Project, Artifact, LogEntry, EngineerTask } from '../types';
 import ArtifactViewer from '../components/ArtifactViewer';
 import LivePreview from '../components/LivePreview';
 import { 
   Play, RefreshCw, Terminal, Download, Monitor, Code2, Send, 
   Sparkles, Activity, FileText, Layout, Share2, MoreHorizontal,
-  ClipboardList, Milestone, BookOpen, Layers, Check, Bot, Globe, Smartphone, Palette, AlertTriangle, Bug, Wrench, Loader2
+  ClipboardList, Milestone, BookOpen, Layers, Check, Bot, Globe, Smartphone, Palette, AlertTriangle, Bug, Wrench, Loader2, History, ListChecks, FileCode, X as LucideX
 } from 'lucide-react';
 
 interface ProjectDetailPageProps {
   projectId: string;
   onBack: () => void;
 }
+
+const TaskHistoryView: React.FC<{ tasks: EngineerTask[] }> = ({ tasks }) => {
+  if (tasks.length === 0) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-indigo-900 font-mono gap-3 uppercase tracking-[0.2em] text-[9px] min-h-[300px] font-bold">
+        <History size={24} className="opacity-20" />
+        AWAITING ENGINEER COMMITS...
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+      <div className="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/5 pb-4">
+        <div>
+          <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Engineer Activity Log</h3>
+          <p className="text-[10px] text-slate-400 dark:text-indigo-400/40 font-black uppercase tracking-[0.2em] mt-1">Timeline of autonomous engineering tasks</p>
+        </div>
+        <div className="px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest flex items-center gap-2">
+          <ListChecks size={12} />
+          {tasks.length} Tasks Finalized
+        </div>
+      </div>
+
+      <div className="relative space-y-4">
+        {/* Timeline line */}
+        <div className="absolute left-[39px] top-4 bottom-4 w-px bg-slate-200 dark:bg-white/5"></div>
+
+        {tasks.slice().reverse().map((task) => (
+          <div key={task.id} className="relative flex gap-6 items-start group animate-fade-in">
+            <div className="flex flex-col items-center shrink-0 w-20">
+              <span className="text-[9px] font-black text-slate-400 dark:text-indigo-400/40 uppercase font-mono mb-2">
+                {new Date(task.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </span>
+              <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#121620] border-2 border-slate-100 dark:border-white/5 flex items-center justify-center text-indigo-500 shadow-sm relative z-10 group-hover:border-indigo-500/50 group-hover:shadow-indigo-500/10 transition-all duration-500">
+                <FileCode size={18} />
+                <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#121620] flex items-center justify-center">
+                   <Check size={8} className="text-white" strokeWidth={4} />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-3xl p-5 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all shadow-sm hover:shadow-md">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-black text-slate-900 dark:text-white font-mono tracking-tight">{task.filename}</h4>
+                <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 uppercase tracking-widest">Completed</span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-indigo-100/40 font-bold leading-relaxed">{task.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: () => void }> = ({ logs, projectId, onDismiss }) => {
   const [fixingIds, setFixingIds] = useState<Set<string>>(new Set());
@@ -41,7 +97,7 @@ const FaultMonitor: React.FC<{ logs: LogEntry[]; projectId: string; onDismiss: (
           className="text-red-500/40 hover:text-red-500 transition-all cursor-pointer p-2 rounded-xl hover:bg-red-500/10 active:scale-90"
           title="Dismiss All Faults"
         >
-          <X size={18} />
+          <LucideX size={18} />
         </button>
       </div>
       <div className="flex items-center gap-2 mb-5 text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">
@@ -144,7 +200,7 @@ const AgentStatusMessage: React.FC<{ project: Project; name: string }> = ({ proj
           <div className="h-[1px] bg-slate-100 dark:bg-white/5 w-full"></div>
           <div className="space-y-2">
             {statuses.map((s, i) => (
-              <div key={i} className="flex items-center gap-2.5 text-[10px] text-slate-600 dark:text-indigo-200 font-bold animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
+              <div key={i} className="flex items-center gap-2.5 text-[10px] text-slate-600 dark:text-indigo-200 font-bold animate-fade-in">
                 <Check size={12} className="text-indigo-600 dark:text-indigo-400" />
                 <span>{s}</span>
               </div>
@@ -185,7 +241,7 @@ const ChatMessage: React.FC<{ log: LogEntry }> = ({ log }) => {
         isUser 
         ? 'bg-gradient-to-br from-indigo-500 to-violet-600 text-white self-end shadow-md shadow-indigo-500/10' 
         : isSuccess
-        ? 'bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 animate-fade-in-up'
+        ? 'bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 animate-fade-in'
         : 'bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 text-slate-800 dark:text-indigo-50'
       }`}>
         {cleanMessage}
@@ -199,7 +255,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
   const [project, setProject] = useState<Project | undefined>(undefined);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [activeTab, setActiveTab] = useState<'preview' | 'brief' | 'prd' | 'architecture' | 'code' | 'terminal'>('preview');
+  const [activeTab, setActiveTab] = useState<'preview' | 'brief' | 'prd' | 'architecture' | 'code' | 'tasks' | 'terminal'>('preview');
   const [chatInput, setChatInput] = useState('');
   const [progress, setProgress] = useState(0);
   const logsEndRef = useRef<HTMLDivElement>(null);
@@ -272,6 +328,11 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
   };
 
   const filteredLogs = logs.filter(l => {
+    // Suppress intermediate engineer task logs as requested
+    if (l.message.includes('Engineer Agent: Completed')) {
+      return false;
+    }
+
     if (l.type === 'info' || l.type === 'success') {
       const isInternalNoisy = (l.message.includes('Analyzing requirements') || 
                                l.message.includes('Architecting') || 
@@ -332,6 +393,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
               { id: 'prd', icon: ClipboardList, label: 'PRD' },
               { id: 'architecture', icon: Milestone, label: 'Plan' },
               { id: 'code', icon: Code2, label: 'Code' },
+              { id: 'tasks', icon: History, label: 'Tasks' },
               { id: 'terminal', icon: Terminal, label: 'Logs', badge: errorCount }
             ].map(tab => (
               <button
@@ -430,7 +492,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
         </div>
 
         <div className="flex-1 relative overflow-hidden flex flex-col bg-slate-100 dark:bg-[#0b0e14]">
-          {project.status === 'RUNNING' && (
+          {project.status === 'RUNNING' && activeTab !== 'tasks' && activeTab !== 'terminal' && (
             <div className="absolute inset-0 z-40 bg-slate-50 dark:bg-[#0b0e14] flex flex-col items-center justify-center animate-fade-in p-10 text-center">
               <div className="w-full max-w-4xl flex flex-col items-center gap-8">
                 <div className="relative w-24 h-24 flex items-center justify-center">
@@ -460,7 +522,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
             </div>
           )}
 
-          <div className={`flex-1 p-6 overflow-hidden transition-opacity duration-500 ${project.status === 'RUNNING' ? 'opacity-0' : 'opacity-100'}`}>
+          <div className={`flex-1 p-6 overflow-hidden transition-opacity duration-500 ${project.status === 'RUNNING' && activeTab !== 'tasks' && activeTab !== 'terminal' ? 'opacity-0' : 'opacity-100'}`}>
             {activeTab === 'preview' && (
               <div className="h-full animate-fade-in">
                 <LivePreview code={codeArtifact?.content} projectName={project.name} />
@@ -577,6 +639,12 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId }) => {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'tasks' && (
+              <div className="h-full overflow-y-auto custom-scrollbar animate-fade-in">
+                <TaskHistoryView tasks={project.engineerTasks || []} />
               </div>
             )}
 

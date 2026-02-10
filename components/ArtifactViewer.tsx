@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Artifact, PrdResponse, PlanResponse } from '../types';
 import { FileCode, FileText, Layout, Copy, Terminal, ChevronRight, CheckCircle2, Clock, Map, Hash, Wand2, Loader2, Check } from 'lucide-react';
@@ -239,7 +240,7 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
   };
 
   return (
-    <div className="animate-fade-in-up">
+    <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-4 mt-3 px-2">
         <div className="flex items-center gap-2">
            <div className="text-indigo-600 dark:text-indigo-400 flex items-center justify-center">

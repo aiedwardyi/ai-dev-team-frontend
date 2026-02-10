@@ -1,5 +1,5 @@
 
-import { Project, Artifact, LogEntry, AgentStage } from "../types";
+import { Project, Artifact, LogEntry, AgentStage, EngineerTask } from "../types";
 import { generatePRD, generatePlan, generateCode } from "./gemini";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -68,7 +68,8 @@ class MockBackend {
       description,
       createdAt: Date.now(),
       status: 'IDLE',
-      currentStage: 'idle'
+      currentStage: 'idle',
+      engineerTasks: []
     };
     this.projects.push(newProject);
     this.addLog(newProject.id, `Project "${name}" created.`, 'info');
@@ -142,6 +143,7 @@ class MockBackend {
 
     this.artifacts = this.artifacts.filter(a => a.projectId !== projectId);
     this.logs = this.logs.filter(l => l.projectId !== projectId); 
+    project.engineerTasks = [];
     
     this.updateProjectStatus(projectId, 'RUNNING', 'pm');
     this.addLog(projectId, "Starting execution pipeline...", 'system');
@@ -189,6 +191,20 @@ class MockBackend {
       await new Promise(r => setTimeout(r, 1000));
 
       const code = await generateCode(plan, prd);
+      
+      // Simulate sequential task completion for the history log
+      for (const file of code.files) {
+        await new Promise(r => setTimeout(r, 800));
+        project.engineerTasks?.push({
+          id: uuidv4(),
+          filename: file.filename,
+          timestamp: Date.now(),
+          description: `Generated source for module ${file.filename.split('/').pop()}`
+        });
+        this.addLog(projectId, `Engineer Agent: Completed ${file.filename}`, 'info');
+        this.save();
+      }
+
       this.artifacts.push({
         id: uuidv4(),
         projectId,

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Sparkles, Send, Zap, ArrowRight, Github, Layout, Activity, Database, Shield, Rocket, Smartphone } from 'lucide-react';
 
@@ -28,9 +29,9 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
     <div className="flex-1 flex flex-col items-center justify-center p-8 relative transition-colors duration-300">
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.1] animate-grid-move pointer-events-none"></div>
       
-      <div className="w-full max-w-2xl relative z-10 animate-fade-in-up">
+      <div className="w-full max-w-2xl relative z-10 animate-fade-in">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-6 animate-pulse">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-6">
             < Zap size={10} fill="currentColor" />
             Next-Gen Multi-Agent Swarm
           </div>
@@ -42,8 +43,8 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
           </p>
         </div>
 
-        {/* Suggestion Chips Centered Above Input */}
-        <div className="mb-6 flex flex-wrap gap-2 justify-center animate-fade-in" style={{ animationDelay: '200ms' }}>
+        {/* Suggestion Chips - Removed delayed fadeInUp to stop blinking/shift */}
+        <div className="mb-6 flex flex-wrap gap-2 justify-center animate-fade-in">
           {suggestions.map((item, idx) => (
             <button 
               key={idx}
@@ -56,7 +57,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ onCreateProject }) => {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="relative group">
+        <form onSubmit={handleSubmit} className="relative group animate-fade-in">
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-teal-600 rounded-3xl blur opacity-10 group-focus-within:opacity-30 transition duration-1000"></div>
           
           <div className="relative bg-white dark:bg-[#0d1017]/95 backdrop-blur-3xl border border-slate-200 dark:border-white/15 rounded-3xl p-2 shadow-2xl overflow-hidden">
