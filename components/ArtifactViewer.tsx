@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Artifact, PrdResponse, PlanResponse } from '../types';
-import { FileCode, FileText, Layout, Copy, Terminal, ChevronRight, CheckCircle2, Clock, Map, Hash } from 'lucide-react';
+import { FileCode, FileText, Layout, Copy, Terminal, ChevronRight, CheckCircle2, Clock, Map, Hash, Wand2, Loader2, Check } from 'lucide-react';
 
 interface ArtifactViewerProps {
   artifact: Artifact;
@@ -70,8 +70,8 @@ const SyntaxHighlighter: React.FC<{ code: string; language: string }> = ({ code,
   const lines = code.split('\n');
 
   return (
-    <div className="flex font-mono text-[12px] leading-relaxed relative group bg-white dark:bg-[#0a0d14]">
-      <div className="flex flex-col text-right pr-4 border-r border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0a0d14] text-slate-400 dark:text-slate-600 select-none min-w-[3.5rem] py-8">
+    <div className="flex font-mono text-[12px] leading-relaxed relative group bg-white dark:bg-[#080a0f]">
+      <div className="flex flex-col text-right pr-4 border-r border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#080a0f] text-slate-400 dark:text-slate-600 select-none min-w-[3.5rem] py-8">
         {lines.map((_, i) => (
           <div key={i} className="h-[1.5em] leading-none flex items-center justify-end">{i + 1}</div>
         ))}
@@ -99,8 +99,10 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
         const files = artifact.content.files || [];
         if(files.length === 0) return <div className="p-8 text-indigo-900 dark:text-indigo-400 text-center italic font-bold">No files generated.</div>;
         
+        const currentContent = files[activeFile]?.content || '';
+
         return (
-          <div className="flex h-full min-h-[550px] bg-white dark:bg-[#0a0d14]">
+          <div className="flex h-full min-h-[550px] bg-white dark:bg-[#080a0f]">
              <div className="w-60 border-r border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#080a0f] flex flex-col shrink-0">
                <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#0a0d14]/50">
                  <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Explorer</div>
@@ -124,21 +126,24 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({ artifact }) => {
                </div>
              </div>
 
-             <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#0d1117]">
+             <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#080a0f]">
                 <div className="h-10 bg-slate-50 dark:bg-[#0a0d14] border-b border-slate-200 dark:border-white/5 flex items-center px-4 gap-2">
-                   <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-[#0d1117] border-x border-t border-slate-200 dark:border-white/5 rounded-t-lg -mb-[1px] relative z-10">
+                   <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-[#080a0f] border-x border-t border-slate-200 dark:border-white/5 rounded-t-lg -mb-[1px] relative z-10">
                       <FileCode size={12} className="text-indigo-600 dark:text-indigo-400" />
                       <span className="text-[10px] font-bold text-slate-800 dark:text-slate-300 font-mono">{files[activeFile]?.filename}</span>
                    </div>
-                   <div className="ml-auto flex items-center gap-4 text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
-                      <span>{files[activeFile]?.language || 'plaintext'}</span>
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-500/50"></div>
+                   
+                   <div className="ml-auto flex items-center gap-3">
+                      <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
+                        <span>{files[activeFile]?.language || 'plaintext'}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-500/50"></div>
+                      </div>
                    </div>
                 </div>
 
                 <div className="flex-1 overflow-auto custom-scrollbar">
                   <SyntaxHighlighter 
-                    code={files[activeFile]?.content || ''} 
+                    code={currentContent} 
                     language={files[activeFile]?.language || 'typescript'} 
                   />
                 </div>

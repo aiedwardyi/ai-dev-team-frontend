@@ -3,7 +3,6 @@ import { generatePRD, generatePlan, generateCode } from "./gemini";
 import { v4 as uuidv4 } from 'uuid';
 
 // In-memory "Database" for the session
-// In a real app, this would be SQLite + Flask
 class MockBackend {
   private projects: Project[] = [];
   private artifacts: Artifact[] = [];
@@ -45,8 +44,6 @@ class MockBackend {
     this.listeners.forEach(l => l());
   }
 
-  // --- Public API methods simulating Backend Routes ---
-
   getProjects() {
     return [...this.projects].sort((a, b) => b.createdAt - a.createdAt);
   }
@@ -60,7 +57,7 @@ class MockBackend {
   }
 
   getLogs(projectId: string) {
-    return this.logs.filter(l => l.projectId === projectId).sort((a, b) => a.timestamp - b.timestamp); // Sort by oldest first for display
+    return this.logs.filter(l => l.projectId === projectId).sort((a, b) => a.timestamp - b.timestamp);
   }
 
   createProject(name: string, description: string) {
@@ -89,6 +86,39 @@ class MockBackend {
     this.save(); 
   }
 
+  public injectSimulatedError(projectId: string) {
+    const errorMessages = [
+      "Critical: Module dependency resolution failed for '@shadcn/ui'.",
+      "Network Timeout: Failed to fetch latest architecture patterns from registry.",
+      "Parsing Error: Unexpected token in generated engineering plan.",
+      "Resource Exhaustion: Agent reasoning limit reached for this session."
+    ];
+    const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    this.addLog(projectId, randomError, 'error');
+  }
+
+  public clearErrors(projectId: string) {
+    this.logs = this.logs.filter(l => !(l.projectId === projectId && l.type === 'error'));
+    this.save();
+  }
+
+  public async fixError(projectId: string, logId: string) {
+    const log = this.logs.find(l => l.id === logId);
+    if (log) {
+      const originalMessage = log.message;
+      const faultType = originalMessage.split(':')[0] || "Fault";
+      
+      // Remove the specific error
+      this.logs = this.logs.filter(l => l.id !== logId);
+      
+      // Add recovery logs
+      this.addLog(projectId, `Agent patching: Resolving ${faultType}...`, 'info');
+      await new Promise(r => setTimeout(r, 1200));
+      this.addLog(projectId, `Recovery Successful: Resolved "${originalMessage}"`, 'success');
+      this.save();
+    }
+  }
+
   private updateProjectStatus(id: string, status: Project['status'], stage: AgentStage) {
     const p = this.projects.find(proj => proj.id === id);
     if (p) {
@@ -98,14 +128,12 @@ class MockBackend {
     }
   }
 
-  // The "Async Task Queue" Processor
   async startExecution(projectId: string) {
     const project = this.getProject(projectId);
     if (!project) return;
 
-    // Reset for fresh run
-    this.artifacts = this.artifacts.filter(a => a.projectId !== projectId); // Clear old artifacts? or Keep history? Let's clear for "Demo" simplicity on re-run
-    this.logs = this.logs.filter(l => l.projectId !== projectId); // Clear logs for fresh run view
+    this.artifacts = this.artifacts.filter(a => a.projectId !== projectId);
+    this.logs = this.logs.filter(l => l.projectId !== projectId); 
     
     this.updateProjectStatus(projectId, 'RUNNING', 'pm');
     this.addLog(projectId, "Starting execution pipeline...", 'system');
@@ -114,7 +142,7 @@ class MockBackend {
     try {
       // 1. PM AGENT
       this.addLog(projectId, "PM Agent: Analyzing requirements...", 'info');
-      await new Promise(r => setTimeout(r, 1000)); // Simulate queue delay
+      await new Promise(r => setTimeout(r, 1000)); 
       
       const prd = await generatePRD(project.description);
       this.artifacts.push({

@@ -21,8 +21,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
     onClose();
   };
 
-  // Using onMouseDown for backdrop to prevent accidental closing 
-  // when text selection starts inside the modal and ends on the backdrop.
   const handleBackdropMouseDown = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -51,7 +49,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors text-slate-400"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors text-slate-400 cursor-pointer"
           >
             <X size={24} />
           </button>
@@ -94,14 +92,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
                  <button
                    key={m.id}
                    onClick={() => setLocalSettings({ ...localSettings, model: m.id as any })}
-                   className={`flex flex-col p-4 rounded-2xl border text-left transition-all ${
+                   className={`flex flex-col p-4 rounded-2xl border-2 text-left transition-colors relative group cursor-pointer ${
                      localSettings.model === m.id 
                      ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-600/10' 
                      : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 hover:border-indigo-500/30 text-slate-500 dark:text-slate-400'
                    }`}
                  >
-                   <span className="text-[10px] font-black uppercase tracking-tight">{m.id}</span>
-                   <span className={`text-[9px] mt-1 font-bold leading-tight ${localSettings.model === m.id ? 'text-white/70' : 'text-slate-400 dark:text-slate-500'}`}>
+                   <div className="flex justify-between items-start w-full mb-1">
+                     <span className="text-[10px] font-black uppercase tracking-tight">{m.id}</span>
+                     {localSettings.model === m.id && (
+                       <div className="bg-white/20 p-0.5 rounded-full shadow-sm flex items-center justify-center">
+                         <Check size={10} className="text-white" strokeWidth={4} />
+                       </div>
+                     )}
+                   </div>
+                   <span className={`text-[9px] font-bold leading-tight transition-colors ${localSettings.model === m.id ? 'text-white/70' : 'text-slate-400 dark:text-slate-500'}`}>
                      {m.desc}
                    </span>
                  </button>
@@ -113,7 +118,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
           <div className={sectionClasses}>
             <div className="flex items-center justify-between">
               <span className={labelClasses}>Profile</span>
-              <button className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+              <button className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer">
                 Open profile on ai-dev-team.app/{localSettings.username}
                 <ExternalLink size={10} />
               </button>
@@ -132,7 +137,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
                     className={inputClasses} 
                   />
                 </div>
-                <button className="bg-slate-900 dark:bg-white text-white dark:text-black px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">Update</button>
+                <button className="bg-slate-900 dark:bg-white text-white dark:text-black px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all cursor-pointer">Update</button>
               </div>
 
               <div className="space-y-2">
@@ -157,7 +162,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
                </div>
                <button 
                   onClick={() => setLocalSettings({...localSettings, chatSuggestions: !localSettings.chatSuggestions})}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${localSettings.chatSuggestions ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-white/10'}`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${localSettings.chatSuggestions ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-white/10'}`}
                >
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSettings.chatSuggestions ? 'translate-x-6' : 'translate-x-1'}`} />
                </button>
@@ -181,7 +186,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
                       name="sound"
                       checked={localSettings.completionSound === opt.id}
                       onChange={() => setLocalSettings({...localSettings, completionSound: opt.id as any})}
-                      className="w-4 h-4 border-2 border-slate-300 dark:border-white/20 text-indigo-600 focus:ring-indigo-500 bg-transparent"
+                      className="w-4 h-4 border-2 border-slate-300 dark:border-white/20 text-indigo-600 focus:ring-indigo-500 bg-transparent cursor-pointer"
                     />
                     <div className="flex items-center gap-2">
                       <opt.icon size={14} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
@@ -225,7 +230,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onUpdate, onClo
           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Settings automatically persist to session</p>
           <button 
             onClick={handleApply}
-            className="px-10 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-indigo-600/20 active:scale-[0.98] transition-all flex items-center gap-2"
+            className="px-10 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-indigo-600/20 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
           >
             <Check size={16} />
             Apply & Close

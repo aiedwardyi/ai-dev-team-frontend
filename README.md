@@ -1,55 +1,51 @@
-# ai-dev-team Platform (Frontend Design Mockup)
+# AI Dev Team: Multi-Agent Swarm Orchestrator
 
-This project is a high-fidelity **frontend design mockup** created for the **ai-dev-team** application. It serves as a working prototype to demonstrate the user interface, interaction patterns, and multi-agent workflow of a high-performance development orchestration platform.
+A high-fidelity software engineering platform that leverages an autonomous AI agent swarm to automate the end-to-end development lifecycle—from conceptual ideation to deployment-ready codebases.
 
-## 📋 Overview
+## 📋 Platform Architecture
 
-ai-dev-team is a concept for an orchestration platform designed to automate the software engineering lifecycle. By utilizing a swarm of specialized autonomous agents, it transforms high-level product ideas into production-ready specifications, architectural blueprints, and functional codebases.
+The **AI Dev Team** ecosystem coordinates specialized agents through a deterministic orchestration pipeline. By segregating responsibilities between product strategy, technical architecture, and full-stack engineering, the platform minimizes hallucinations and maximizes structural integrity.
 
-**Note:** This current repository is a frontend-only demonstration. It simulates backend processing and agent synthesis to showcase the intended user experience.
+### The Swarm Pipeline
+1.  **PM Agent (Requirements)**: Transforms raw user intent into structured **Product Requirements Documents (PRDs)**.
+2.  **Planner Agent (Architecture)**: Decomposes PRDs into multi-phase **System Design Blueprints**.
+3.  **Engineer Agent (Synthesis)**: Synthesizes technical blueprints into functional **TypeScript/React Codebases**.
 
-## 🚀 Core Features (Mockup Features)
+## 🚀 Key Features
 
-- **Autonomous Agent Swarm Simulation**: Demonstrates a pipeline orchestrating PM, Architect, and Engineer agents.
-- **Real-time Synthesis UX**: Visualizes progress tracking as "code" is built by the simulated swarm.
-- **Interactive Previews**: A sandboxed preview panel showing how generated applications would appear.
-- **Advanced Settings Interface**: A professional settings module featuring account management, vibe coding levels, and model selection UI.
-- **Artifact Management UI**: Pre-designed views for versioned PRDs, detailed system architecture roadmaps, and source code.
+### 1. Dynamic Progress Tracking
+*   **Stage-Specific Pulse**: Real-time progress bars (0-100%) for each individual agent task, providing granular visibility into the "thinking" process.
+*   **Global Completion Overlay**: A unified view of the entire project lifecycle status.
 
-## 🏗 Architecture Concept
+### 2. Interactive Reasoning Engines
+*   **Model Selection**: Switch between specialized reasoning engines (Gemini 3 Pro, Claude, GPT) with a high-fidelity selection UI.
+*   **Vibe Coding Momentum**: Integrated telemetry tracking development "vibe" and momentum.
 
-The simulated platform follows a linear agentic workflow:
+### 3. Resilience & Self-Healing
+*   **Fault Logic Monitor**: A dedicated runtime terminal tracking agent reasoning and system logs.
+*   **Proactive Recovery**: Built-in "Agentic Self-Healing" protocols that diagnose, patch, and verify runtime errors.
+*   **Simulation Tools**: Inject manual faults to test the swarm's recovery and patching capabilities.
 
-1.  **PM Agent**: Analyzes user prompts to generate a comprehensive Product Requirements Document (PRD).
-2.  **Architect Agent**: Consumes the PRD to produce a technical execution plan and system design.
-3.  **Engineer Agent**: Synthesizes the execution plan into high-quality TypeScript/React source code.
+### 4. Enterprise Artifact Management
+*   **Live Preview Window**: Real-time rendering of generated code with Desktop and Mobile viewport toggles.
+*   **Code Explorer**: Advanced file-tree navigation with custom syntax highlighting.
+*   **Artifact Synchronization**: Seamless switching between PRDs, Execution Plans, and Source Code.
 
-## 🛠 Tech Stack (Mockup)
+## 🛠 Technical Stack
 
-- **React 19**
-- **Tailwind CSS**
-- **Lucide Icons**
-- **Vite**
+*   **Frontend**: React 19 (Functional Components, Context API, Advanced Hooks)
+*   **Design System**: Tailwind CSS (JIT, Custom Glassmorphism, Neon Utilities)
+*   **Icons**: Lucide React
+*   **Orchestration**: Custom `MockBackend` state machine for synchronized agent collaboration.
 
-## 🏁 Getting Started
+## 💻 Getting Started
 
-As this is a static design mockup, it does not require a backend or API keys to run the demo.
+This platform operates as a high-fidelity frontend simulation, requiring zero external API keys to demonstrate the full agentic workflow.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ai-dev-team/mockup.git
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+1.  **Initialize**: Run `npm install` to load core dependencies.
+2.  **Launch**: Execute `npm run dev` to start the local simulation.
+3.  **Synthesize**: Input a project brief on the dashboard to trigger the autonomous agent pipeline.
 
 ---
 
-© 2025 ai-dev-team Ecosystem. Created for frontend design verification and stakeholder demonstration.
+*© 2025 AI Dev Team Ecosystem. Engineering the future of autonomous software synthesis.*
