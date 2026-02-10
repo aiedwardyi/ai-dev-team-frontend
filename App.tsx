@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { backend } from './services/orchestrator';
 import { Project, SystemSettings } from './types';
@@ -67,6 +68,13 @@ const App: React.FC = () => {
     backend.startExecution(project.id);
   };
 
+  const handleDeleteProject = (id: string) => {
+    backend.deleteProject(id);
+    if (currentProjectId === id) {
+      setCurrentProjectId(null);
+    }
+  };
+
   const updateSettings = (updates: Partial<SystemSettings>) => {
     setSettings(prev => ({ ...prev, ...updates }));
   };
@@ -80,6 +88,7 @@ const App: React.FC = () => {
         onSelect={setCurrentProjectId}
         onNewProject={() => setCurrentProjectId(null)}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onDeleteProject={handleDeleteProject}
         theme={settings.theme}
         onToggleTheme={() => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
       />

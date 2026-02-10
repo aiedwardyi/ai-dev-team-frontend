@@ -1,3 +1,4 @@
+
 import { Project, Artifact, LogEntry, AgentStage } from "../types";
 import { generatePRD, generatePlan, generateCode } from "./gemini";
 import { v4 as uuidv4 } from 'uuid';
@@ -73,6 +74,13 @@ class MockBackend {
     this.addLog(newProject.id, `Project "${name}" created.`, 'info');
     this.save();
     return newProject;
+  }
+
+  deleteProject(id: string) {
+    this.projects = this.projects.filter(p => p.id !== id);
+    this.artifacts = this.artifacts.filter(a => a.projectId !== id);
+    this.logs = this.logs.filter(l => l.projectId !== id);
+    this.save();
   }
 
   public addLog(projectId: string, message: string, type: LogEntry['type']) {
