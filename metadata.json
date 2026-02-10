@@ -1,0 +1,5 @@
+{
+  "name": "ai-dev-team-frontend",
+  "description": "A mockup of a multi-agent AI development platform. Simulates a PM -> Planner -> Engineer workflow without requiring a backend or API keys.",
+  "requestFramePermissions": []
+}
