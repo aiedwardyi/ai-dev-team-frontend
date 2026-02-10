@@ -1,78 +1,163 @@
 
 import { PrdResponse, PlanResponse, CodeResponse } from "../types";
 
-// Simulated delay to mimic agent "thinking" time
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+/**
+ * MOCKUP ENGINE
+ * These functions simulate the processing delay and intelligence of AI agents.
+ * In a production environment, these would call the Gemini API.
+ */
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const generatePRD = async (idea: string): Promise<PrdResponse> => {
-  await delay(2000);
+  // Simulate "Thinking" delay
+  await sleep(2500);
+
+  const title = idea.split(' ').slice(0, 3).join(' ') || "Neural Application";
+
   return {
-    title: `${idea} - Product Requirements`,
-    summary: `A comprehensive plan to build: ${idea}. This document outlines the core functional requirements and user experience goals for the proposed application.`,
+    title: `${title} - Core Requirements`,
+    summary: `A high-performance application based on the user's request: "${idea}". This platform focuses on modular scalability and intuitive user experience.`,
     features: [
-      "Intuitive and responsive user interface with multi-theme support",
-      "Real-time data synchronization with optimistic UI updates",
-      "Advanced search and filtering capabilities for system artifacts",
-      "Automated workflow orchestration with persistent session state"
+      "User Authentication with OAuth2 integration",
+      "Real-time data visualization dashboard",
+      "Collaborative workspace for team members",
+      "Automated reporting and export functionality",
+      "Cross-platform responsive design system"
     ],
     userStories: [
-      "As a developer, I want to see the progress of the agent swarm so I can track development in real-time.",
-      "As a project manager, I want a clear PRD generated from my ideas to ensure technical alignment.",
-      "As a stakeholder, I want to see a live preview of the code to verify feature implementation."
+      "As a user, I want to securely log in so that my data is protected.",
+      "As a developer, I want a clean API so that I can extend the platform.",
+      "As a manager, I want to see real-time progress of my team."
     ],
     techStackRecommendation: [
-      "Frontend: React 19 with TypeScript",
-      "Styling: Tailwind CSS 3.4+",
-      "State: React Context & Hooks",
-      "Icons: Lucide React"
+      "Frontend: React 19 + TypeScript",
+      "Styling: Tailwind CSS",
+      "State Management: React Context + Query",
+      "Backend: Node.js / Express",
+      "Database: PostgreSQL / Prisma"
     ]
   };
 };
 
 export const generatePlan = async (prd: PrdResponse): Promise<PlanResponse> => {
-  await delay(2500);
+  // Simulate "Thinking" delay for Architect agent
+  await sleep(3000);
+
   return {
     phases: [
       {
-        name: "Phase 1: Environment Synthesis",
-        description: "Setting up the core project structure and base dependencies.",
-        steps: ["Initialize React/Vite ecosystem", "Configure Tailwind design tokens", "Set up project directory layout"]
+        name: "Foundation & Infrastructure",
+        description: "Setting up the project core and shared utilities.",
+        steps: [
+          "Initialize TypeScript React environment",
+          "Configure Tailwind design tokens",
+          "Setup base routing and layout components"
+        ]
       },
       {
-        name: "Phase 2: Core Logic Implementation",
-        description: "Developing the primary business logic and state management.",
-        steps: ["Implement central orchestration state", "Build agent communication protocol", "Create data persistence layer"]
+        name: "Feature Implementation",
+        description: "Building out the core modules defined in the PRD.",
+        steps: [
+          "Develop Authentication context",
+          "Build Data Visualization engine",
+          "Integrate real-time socket connections"
+        ]
       },
       {
-        name: "Phase 3: High-Fidelity UI/UX",
-        description: "Assembling the visual interface and interactive components.",
-        steps: ["Build responsive dashboard layout", "Implement artifact visualization panels", "Add real-time progress indicators"]
+        name: "Final Assembly & QA",
+        description: "Polishing the UI and ensuring cross-browser compatibility.",
+        steps: [
+          "Perform automated unit testing",
+          "Audit accessibility (ARIA) and performance",
+          "Deploy to staging environment"
+        ]
       }
     ],
-    estimatedTimeline: "3 Business Days (Simulated)"
+    estimatedTimeline: "2-3 Development Cycles"
   };
 };
 
 export const generateCode = async (plan: PlanResponse, prd: PrdResponse): Promise<CodeResponse> => {
-  await delay(3000);
+  // Simulate "Thinking" delay for Engineer agent
+  await sleep(4000);
+
   return {
     files: [
       {
         filename: "App.tsx",
         language: "typescript",
-        content: `import React from 'react';\nimport Dashboard from './components/Dashboard';\n\nexport default function App() {\n  return (\n    <div className="min-h-screen bg-slate-950 text-white font-sans">\n      <Dashboard project="${prd.title}" />\n    </div>\n  );\n}`
+        content: `import React, { useState, useEffect } from 'react';
+import Dashboard from './components/Dashboard';
+import Sidebar from './components/Sidebar';
+
+export default function App() {
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    // Simulated data fetch for ${prd.title}
+    console.log("Initializing application modules...");
+  }, []);
+
+  return (
+    <div className="flex h-screen bg-slate-900 text-white font-sans">
+      <Sidebar />
+      <main className="flex-1 overflow-auto p-8">
+        <header className="mb-8">
+          <h1 className="text-4xl font-black">${prd.title}</h1>
+          <p className="text-slate-400 mt-2">v1.0.0-beta</p>
+        </header>
+        <Dashboard />
+      </main>
+    </div>
+  );
+}`
       },
       {
         filename: "components/Dashboard.tsx",
         language: "typescript",
-        content: `import React from 'react';\n\nexport default function Dashboard({ project }) {\n  return (\n    <div className="p-10">\n      <h1 className="text-4xl font-black tracking-tighter mb-4">{project}</h1>\n      <div className="bg-white/5 border border-white/10 p-6 rounded-3xl">\n        <p className="text-slate-400">Dashboard interface active.</p>\n      </div>\n    </div>\n  );\n}`
+        content: `import React from 'react';
+import { Activity, Users, Database } from 'lucide-react';
+
+export default function Dashboard() {
+  const stats = [
+    { label: 'Active Users', value: '1,284', icon: Users },
+    { label: 'System Uptime', value: '99.9%', icon: Activity },
+    { label: 'Database Load', value: '12%', icon: Database },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {stats.map((stat, i) => (
+        <div key={i} className="p-6 bg-slate-800 rounded-3xl border border-white/5 hover:border-blue-500/50 transition-all">
+          <div className="flex items-center gap-4 mb-4">
+            <stat.icon className="text-blue-500" />
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{stat.label}</span>
+          </div>
+          <div className="text-3xl font-black">{stat.value}</div>
+        </div>
+      ))}
+    </div>
+  );
+}`
       },
       {
-        filename: "README.md",
-        language: "markdown",
-        content: `# Generated Project: ${prd.title}\n\nBuilt using the AI Dev Team Orchestrator.\n\n## Setup\n\`\`\`bash\nnpm install\nnpm run dev\n\`\`\``
+        filename: "styles/theme.ts",
+        language: "typescript",
+        content: `export const theme = {
+  colors: {
+    primary: '#3b82f6',
+    secondary: '#8b5cf6',
+    accent: '#10b981',
+    background: '#0f172a'
+  },
+  spacing: {
+    base: '1rem',
+    large: '2rem'
+  }
+};`
       }
     ],
-    setupInstructions: "Run 'npm install' followed by 'npm run dev' to launch the development server."
+    setupInstructions: "Run 'npm install' followed by 'npm run dev' to launch the local development server. Ensure environment variables for the database connection are configured in .env."
   };
 };
