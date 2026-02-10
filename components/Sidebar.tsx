@@ -160,7 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   type="text" 
                   autoFocus
                   value={deleteConfirmation}
-                  onChange={(e) => setDeleteConfirmation(e.target.value)}
+                  onChange={(e) => setDeleteConfirmation(e.target.value.toUpperCase())}
                   placeholder="Type here..."
                   className="w-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-center text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500 transition-colors font-black tracking-widest uppercase placeholder:normal-case placeholder:font-bold placeholder:text-slate-300 dark:placeholder:text-slate-600"
                 />
